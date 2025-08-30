@@ -1,7 +1,7 @@
 # train a miniature character-level shakespeare model
 # good for debugging and playing on macbooks and such
 
-out_dir = 'out-proj'
+out_dir = 'out-control'
 eval_interval = 300 # keep frequent because we'll overfit
 eval_iters = 10
 log_interval = 30 # don't print too too often
@@ -33,3 +33,5 @@ device = "cuda"
 # on macbook also add
 # device = 'cpu'  # run on cpu only
 # compile = False # do not torch compile the model
+
+attn_impl = "causal"
