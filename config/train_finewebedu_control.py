@@ -9,7 +9,7 @@ log_interval = 0 # don't print too too often
 # we expect to overfit on this small dataset, so only save when val improves
 always_save_checkpoint = False
 
-dataset = 'wikitext'
+dataset = 'fineweb-edu'
 gradient_accumulation_steps = 5
 batch_size = 12
 block_size = 1024 # context of up to 256 previous characters

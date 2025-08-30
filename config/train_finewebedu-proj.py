@@ -1,18 +1,18 @@
 # train a miniature character-level shakespeare model
 # good for debugging and playing on macbooks and such
 
-out_dir = 'out-control'
-eval_interval = 1000 # keep frequent because we'll overfit
+out_dir = 'out-proj'
+eval_interval = 300 # keep frequent because we'll overfit
 eval_iters = 10
-log_interval = 0 # don't print too too often
+log_interval = 30 # don't print too too often
 
 # we expect to overfit on this small dataset, so only save when val improves
 always_save_checkpoint = False
 
-dataset = 'wikitext'
+dataset = 'fineweb-edu'
 gradient_accumulation_steps = 5
 batch_size = 12
-block_size = 1024 # context of up to 256 previous characters
+block_size = 256 # context of up to 256 previous characters
 
 # baby GPT model :)
 n_layer = 8
@@ -34,4 +34,4 @@ device = "cuda"
 # device = 'cpu'  # run on cpu only
 # compile = False # do not torch compile the model
 
-attn_impl = "causal"
+attn_impl = "proj"

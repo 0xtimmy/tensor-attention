@@ -27,7 +27,7 @@ import torch
 from torch.nn.parallel import DistributedDataParallel as DDP
 from torch.distributed import init_process_group, destroy_process_group
 
-from model import GPTConfig, GPT, CausalProjSelfAttention, CausalSelfAttention
+from model import GPTConfig, GPT, CausalProjSelfAttention, CausalSelfAttention, CausalTensorSelfAttention
 
 # -----------------------------------------------------------------------------
 # default config values designed to train a gpt2 (124M) on OpenWebText
@@ -151,7 +151,8 @@ model_args = dict(n_layer=n_layer, n_head=n_head, n_embd=n_embd, block_size=bloc
 
 gpt_attn_impl = {
         "causal": CausalSelfAttention,
-        "proj": CausalProjSelfAttention
+        "proj": CausalProjSelfAttention,
+        "tensor": CausalTensorSelfAttention,
     }[attn_impl]
 if init_from == 'scratch':
     # init a new model from scratch
