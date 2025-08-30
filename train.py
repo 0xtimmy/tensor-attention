@@ -261,7 +261,7 @@ raw_model = model.module if ddp else model # unwrap DDP container if needed
 running_mfu = -1.0
 if logging:
     with open("train.log", "w") as f:
-        f.write(f"training...")
+        f.write(f"training...\n")
         f.close()
 while True:
 
@@ -276,7 +276,7 @@ while True:
         print(f"step {iter_num}: train loss {losses['train']:.4f}, val loss {losses['val']:.4f}")
         if logging:
             with open("train.log", "a") as f:
-                f.write(f"step {iter_num}: train loss {losses['train']:.4f}, val loss {losses['val']:.4f}")
+                f.write(f"step {iter_num}: train loss {losses['train']:.4f}, val loss {losses['val']:.4f}\n")
                 f.close()
         if wandb_log:
             wandb.log({
@@ -300,7 +300,7 @@ while True:
                 print(f"saving checkpoint to {out_dir}")
                 if logging:
                     with open("train.log", "a") as f:
-                        f.write(f"saving checkpoint to {out_dir}")
+                        f.write(f"saving checkpoint to {out_dir}\n")
                         f.close()
                 torch.save(checkpoint, os.path.join(out_dir, 'ckpt.pt'))
         
@@ -347,7 +347,7 @@ while True:
         print(f"iter {iter_num}: loss {lossf:.4f}, time {dt*1000:.2f}ms, mfu {running_mfu*100:.2f}%")
         if logging:
             with open("train.log", "a") as f:
-                f.write(f"iter {iter_num}: loss {lossf:.4f}, time {dt*1000:.2f}ms, mfu {running_mfu*100:.2f}%")
+                f.write(f"iter {iter_num}: loss {lossf:.4f}, time {dt*1000:.2f}ms, mfu {running_mfu*100:.2f}%\n")
                 f.close()
     iter_num += 1
     local_iter_num += 1
