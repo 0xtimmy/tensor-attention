@@ -32,6 +32,8 @@ from model import GPTConfig, GPT, CausalProjSelfAttention, CausalSelfAttention
 # -----------------------------------------------------------------------------
 # default config values designed to train a gpt2 (124M) on OpenWebText
 # I/O
+logging = True
+
 out_dir = 'out'
 eval_interval = 2000
 log_interval = 1
@@ -210,7 +212,7 @@ checkpoint = None # free up memory
 if compile:
     print("compiling the model... (takes a ~minute)")
     unoptimized_model = model
-    model = model # requires PyTorch 2.0
+    model = torch.compile(model) # requires PyTorch 2.0
 
 # wrap model into DDP container
 if ddp:
@@ -268,6 +270,10 @@ while True:
     if iter_num % eval_interval == 0 and master_process:
         losses = estimate_loss()
         print(f"step {iter_num}: train loss {losses['train']:.4f}, val loss {losses['val']:.4f}")
+        if logging:
+            with open("train.log", "a") as f:
+                f.write(f"step {iter_num}: train loss {losses['train']:.4f}, val loss {losses['val']:.4f}")
+                f.close()
         if wandb_log:
             wandb.log({
                 "iter": iter_num,
@@ -288,6 +294,10 @@ while True:
                     'config': config,
                 }
                 print(f"saving checkpoint to {out_dir}")
+                if logging:
+                    with open("train.log", "a") as f:
+                        f.write(f"saving checkpoint to {out_dir}")
+                        f.close()
                 torch.save(checkpoint, os.path.join(out_dir, 'ckpt.pt'))
         
     if iter_num == 0 and eval_only:
@@ -331,6 +341,10 @@ while True:
             mfu = raw_model.estimate_mfu(batch_size * gradient_accumulation_steps, dt)
             running_mfu = mfu if running_mfu == -1.0 else 0.9*running_mfu + 0.1*mfu
         print(f"iter {iter_num}: loss {lossf:.4f}, time {dt*1000:.2f}ms, mfu {running_mfu*100:.2f}%")
+        if logging:
+            with open("train.log", "a") as f:
+                f.write(f"iter {iter_num}: loss {lossf:.4f}, time {dt*1000:.2f}ms, mfu {running_mfu*100:.2f}%")
+                f.close()
     iter_num += 1
     local_iter_num += 1
 
